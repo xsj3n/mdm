@@ -1,43 +1,39 @@
 {
-  description = "NixOS-Eye-Config";
-
-  
+  description = "Haskell dev shell";
 
   inputs = {
-    # NixOS official package source, using the nixos-23.11 branch here
-    #nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs.url          = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-hardware.url   = "github:NixOS/nixos-hardware/master";
-    home-manager = {
-      	url = "github:nix-community/home-manager";
-      	inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; 
     };
-  };
 
-  outputs = inputs @{self, nixpkgs, nixos-hardware, home-manager, ... }:
+  outputs = { self , nixpkgs, ... }: 
   let
     system = "x86_64-linux";
-  in
+  in 
   {
-   nixosConfigurations = 
-   {
-     eye = nixpkgs.lib.nixosSystem 
-     {
-       
-       modules = 
-       [
-         ./system
-	 nixos-hardware.nixosModules.asus-zephyrus-ga401
-         home-manager.nixosModules.home-manager
-	 {
-           home-manager.useGlobalPkgs = true;
-           home-manager.useUserPackages = true;
-	   home-manager.extraSpecialArgs = inputs;
-	   home-manager.backupFileExtension = "backup";
-           home-manager.users.xis = import ./user/home.nix; 
-         }
-       ];
-     };
-   };
+    devShells."${system}".default = 
+    let
+        libraries = with pkgs;[]; 
+        pkgs = import nixpkgs { inherit system; } ;
+    in pkgs.mkShell 
+    {
+      packages = with pkgs; [
+        haskellPackages.haskell-language-server
+        bashInteractive
+        pkg-config
+        clang 
+        ghc
+
+      ];
+
+      buildInputs =  with pkgs; [
+        pkg-config
+        clang
+      ];
+  
+      shellHook = ''
+        export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
+        export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
+      '';
+    };
   };
- }
+}

@@ -1,4 +1,0 @@
-{...}:
-{
-  imports = [ ./samba-client.nix ];
-}
