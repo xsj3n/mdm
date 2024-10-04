@@ -12,8 +12,13 @@
   {
     devShells."${system}".default = 
     let
-        libraries = with pkgs;[]; 
-        pkgs = import nixpkgs { inherit system; } ;
+        libraries = with pkgs; [
+          haskellPackages.yesod
+        ]; 
+        ghclib = pkgs.haskellPackages.ghcWithPackages (hpkg: with hpkg; [
+          yesod
+        ]);
+        pkgs = import nixpkgs { inherit system; };
     in pkgs.mkShell 
     {
       packages = with pkgs; [
@@ -28,6 +33,7 @@
       buildInputs =  with pkgs; [
         pkg-config
         clang
+        ghclib
       ];
   
       shellHook = ''
