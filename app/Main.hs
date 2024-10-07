@@ -3,10 +3,11 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
+module Main where 
 import Yesod
+import AA
 
 data Mgmt = Mgmt
-
 mkYesod "Mgmt" [parseRoutes|
 / RootR GET
 |]
@@ -17,4 +18,6 @@ getRootR :: Handler Value
 getRootR = return $ object ["msg" .= "text"]
 
 main :: IO ()
-main  = warp 3000 Mgmt
+main  = print $ getIPKeyList  
+
+--warp 3000 Mgmt
