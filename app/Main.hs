@@ -2,8 +2,8 @@
 {-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Main where
-import           Yesod
+{-# LANGUAGE ExtendedDefaultRules #-}
+import Yesod
 
 data Mgmt = Mgmt
 
@@ -13,6 +13,7 @@ mkYesod "Mgmt" [parseRoutes|
 
 instance Yesod Mgmt
 
+getRootR :: Handler Value
 getRootR = return $ object ["msg" .= "text"]
 
 main :: IO ()
