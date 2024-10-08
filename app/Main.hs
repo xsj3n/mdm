@@ -5,7 +5,7 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 module Main where 
 import Yesod
-import AA
+import AAMgmr
 
 data Mgmt = Mgmt
 mkYesod "Mgmt" [parseRoutes|
