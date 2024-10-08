@@ -19,7 +19,7 @@ getRootR :: Handler Value
 getRootR = return $ object ["msg" .= "text"]
 
 main :: IO ()
-main  = getIPKeyList >>= print . intercalate " " 
+main  = getIPKeyList >>= print
 
 
 --warp 3000 Mgmt
