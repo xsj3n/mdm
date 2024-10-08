@@ -6,6 +6,7 @@
 module Main where 
 import Yesod
 import AAMgmr
+import Data.List
 
 data Mgmt = Mgmt
 mkYesod "Mgmt" [parseRoutes|
@@ -18,6 +19,7 @@ getRootR :: Handler Value
 getRootR = return $ object ["msg" .= "text"]
 
 main :: IO ()
-main  = print $ getIPKeyList  
+main  = getIPKeyList >>= print . intercalate " " 
+
 
 --warp 3000 Mgmt
